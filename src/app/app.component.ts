@@ -3,16 +3,16 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  OnInit,
 } from '@angular/core'
-import { RouterModule } from '@angular/router'
+import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import {
-  BalButtonModule,
-  BalHeadingModule,
+  BalNavbarModule,
+  BalTabsModule,
+  BalTextModule,
 } from '@baloise/design-system-components-angular'
-import { TranslateModule } from '@ngx-translate/core'
-import { HelloComponent } from './components/hello.component'
-import { I18nService } from './services/i18n.service'
+import { filter } from 'rxjs'
+
+type TabValue = 'basic' | 'checkout'
 
 @Component({
   selector: 'app-root',
@@ -20,62 +20,62 @@ import { I18nService } from './services/i18n.service'
   imports: [
     CommonModule,
     RouterModule,
-    TranslateModule,
-    HelloComponent,
-    BalHeadingModule,
-    BalButtonModule,
+    BalNavbarModule,
+    BalTextModule,
+    BalTabsModule,
   ],
   template: `
     <bal-app>
+      <header>
+        <bal-navbar interface="app">
+          <bal-navbar-brand>Change Detection</bal-navbar-brand>
+          <bal-navbar-menu>
+            <bal-navbar-menu-start class="is-justify-content-flex-start">
+              <bal-tabs
+                interface="navbar"
+                inverted
+                [value]="tabValue"
+                (balChange)="tabChanged($event)">
+                <bal-tab-item value="basic" label="Basic"></bal-tab-item>
+              </bal-tabs>
+            </bal-navbar-menu-start>
+            <bal-navbar-menu-end></bal-navbar-menu-end>
+          </bal-navbar-menu>
+        </bal-navbar>
+      </header>
       <main class="container">
-        <bal-heading>{{ 'HELLO' | translate }}</bal-heading>
-        <bal-button>{{ 'BUTTON' | translate }}</bal-button>
-
-        <div class="has-background-green-3 p-large has-radius-large has-shadow">
-          Hello World
-        </div>
-
-        <bal-button (click)="changeToGerman()">German</bal-button>
-        <bal-button (click)="changeToEnglish()">English</bal-button>
-
-        <nav>
-          <ul>
-            <li>
-              <a
-                routerLink="/"
-                routerLinkActive="active"
-                ariaCurrentWhenActive="page"
-                >First Component</a
-              >
-            </li>
-            <li>
-              <a
-                routerLink="/checkout"
-                routerLinkActive="active"
-                ariaCurrentWhenActive="page"
-                >Second Component</a
-              >
-            </li>
-          </ul>
-        </nav>
-
         <router-outlet></router-outlet>
       </main>
     </bal-app>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppComponent {
-  title = 'pizza-app'
+  tabValue: TabValue = 'basic'
 
-  constructor(private i18nService: I18nService) {}
-
-  changeToEnglish() {
-    this.i18nService.use('en')
+  constructor(private router: Router) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(event => {
+        const { url } = event as NavigationEnd
+        if (url === '/') {
+          this.tabValue = 'basic'
+        } else {
+          this.tabValue = 'checkout'
+        }
+      })
   }
 
-  changeToGerman() {
-    this.i18nService.use('de')
+  tabChanged(tabEvent: CustomEvent<string>) {
+    const newTabValue = tabEvent.detail as TabValue
+    if (this.tabValue !== newTabValue) {
+      if (newTabValue === 'basic') {
+        this.router.navigateByUrl('')
+      }
+      if (newTabValue === 'checkout') {
+        this.router.navigateByUrl('')
+      }
+    }
   }
 }
