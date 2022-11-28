@@ -7,6 +7,7 @@ import {
 } from '@baloise/design-system-components-angular'
 import { HttpClient } from '@angular/common/http'
 import { HelloComponent } from '../components/hello.component'
+import { Person, PersonComponent } from '../components/person.component'
 
 @Component({
   selector: 'app-basic',
@@ -17,6 +18,7 @@ import { HelloComponent } from '../components/hello.component'
     BalHeadingModule,
     BalInputModule,
     HelloComponent,
+    PersonComponent,
   ],
   template: `
     <section class="mt-large">
@@ -36,9 +38,17 @@ import { HelloComponent } from '../components/hello.component'
         </bal-button>
 
         <bal-button (click)="loadSwapi()"> Load Star Wars People </bal-button>
+        <bal-button (click)="changeMutablePerson()">
+          Change mutable Person
+        </bal-button>
+        <bal-button (click)="changeImmutablePerson()">
+          Change immutable Person
+        </bal-button>
       </bal-button-group>
 
       <app-hello [label]="lastname"></app-hello>
+
+      <app-person [person]="person"></app-person>
 
       <ng-container *ngIf="people.length > 0">
         <bal-heading level="h3" class="mt-large">Star Wars People</bal-heading>
@@ -80,6 +90,25 @@ export class BasicComponent {
     if (value) {
       this.lastname = value
     }
+  }
+
+  /**
+   * Mutable objects
+   */
+
+  person: Person = {
+    firstname: 'Peter',
+    lastname: 'Parker',
+  }
+
+  changeMutablePerson() {
+    console.log('-> changeMutablePerson')
+    this.person.lastname = 'Mutable'
+  }
+
+  changeImmutablePerson() {
+    console.log('-> changeImmutablePerson')
+    this.person = { ...this.person, lastname: 'Immutable' }
   }
 
   /**

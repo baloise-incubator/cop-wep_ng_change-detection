@@ -13,13 +13,10 @@ import { CommonModule } from '@angular/common'
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class HelloComponent {
-  /**
-   * Defines the label of the greetings
-   */
   @Input() label = 'hello'
 
   getHello() {
-    console.warn('[HELLO] - Change Detection happened!')
+    console.error('[HELLO] - Change Detection happened!')
     return 'Hello'
   }
 }
