@@ -23,7 +23,7 @@ export class PersonComponent {
   @Input() person!: Person
 
   getHello() {
-    console.warn('[PERSON] - Change Detection happened!')
+    console.error('[PERSON] - Change Detection happened!')
     return 'Aloha'
   }
 }

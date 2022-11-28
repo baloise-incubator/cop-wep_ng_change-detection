@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core'
 import { CommonModule } from '@angular/common'
 import {
   BalButtonModule,
@@ -8,6 +12,7 @@ import {
 import { HttpClient } from '@angular/common/http'
 import { HelloComponent } from '../components/hello.component'
 import { Person, PersonComponent } from '../components/person.component'
+import { BehaviorSubject } from 'rxjs'
 
 @Component({
   selector: 'app-basic',
@@ -56,6 +61,13 @@ import { Person, PersonComponent } from '../components/person.component'
           <li *ngFor="let person of people">{{ person.name }}</li>
         </ul>
       </ng-container>
+
+      <!-- <ng-container *ngIf="people$ | async as asyncPeople">
+        <bal-heading level="h3" class="mt-large">Star Wars People</bal-heading>
+        <ul class="is-list">
+          <li *ngFor="let person of asyncPeople">{{ person.name }}</li>
+        </ul>
+      </ng-container> -->
     </section>
   `,
   styles: [],
@@ -64,6 +76,11 @@ import { Person, PersonComponent } from '../components/person.component'
 export class BasicComponent {
   firstname = 'Tony'
   lastname = 'Stark'
+
+  constructor(
+    private http: HttpClient,
+    private changeDetectorRef: ChangeDetectorRef,
+  ) {}
 
   get fullName() {
     console.warn('[BASIC] - Change Detection happened!')
@@ -76,6 +93,7 @@ export class BasicComponent {
       console.log('-> changeNameTimeout ended')
       this.firstname = 'Bruce'
       this.lastname = 'Banner'
+      // this.changeDetectorRef.markForCheck()
     }, 1000)
   }
 
@@ -116,15 +134,15 @@ export class BasicComponent {
    */
 
   people: SwapiPeople[] = []
-
-  constructor(private http: HttpClient) {}
+  // people$ = new BehaviorSubject<SwapiPeople[]>([])
 
   loadSwapi(): void {
     console.log('-> Http Call')
     this.http
       .get<SwapiPeopleResponse>('https://swapi.dev/api/people/')
       .subscribe(response => {
-        console.log('-> Http Call ended')
+        console.log('-> Http Call ended', response.results)
+        // this.people$.next(response.results)
         this.people = response.results
       })
   }
