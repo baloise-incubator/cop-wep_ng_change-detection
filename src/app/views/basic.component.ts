@@ -6,14 +6,22 @@ import {
   BalInputModule,
 } from '@baloise/design-system-components-angular'
 import { HttpClient } from '@angular/common/http'
+import { HelloComponent } from '../components/hello.component'
 
 @Component({
   selector: 'app-basic',
   standalone: true,
-  imports: [CommonModule, BalButtonModule, BalHeadingModule, BalInputModule],
+  imports: [
+    CommonModule,
+    BalButtonModule,
+    BalHeadingModule,
+    BalInputModule,
+    HelloComponent,
+  ],
   template: `
     <section class="mt-large">
-      <bal-heading>{{ firstname }} {{ lastname }}</bal-heading>
+      <bal-heading>Basic Demo</bal-heading>
+      <bal-heading level="h2">{{ firstname }} {{ lastname }}</bal-heading>
       <bal-heading level="h2" subtitle="">{{ fullName }}</bal-heading>
 
       <bal-input
@@ -29,6 +37,8 @@ import { HttpClient } from '@angular/common/http'
 
         <bal-button (click)="loadSwapi()"> Load Star Wars People </bal-button>
       </bal-button-group>
+
+      <app-hello [label]="lastname"></app-hello>
 
       <ng-container *ngIf="people.length > 0">
         <bal-heading level="h3" class="mt-large">Star Wars People</bal-heading>
@@ -46,7 +56,7 @@ export class BasicComponent {
   lastname = 'Stark'
 
   get fullName() {
-    console.warn('Change Detection happened!')
+    console.warn('[BASIC] - Change Detection happened!')
     return this.firstname + ' ' + this.lastname
   }
 
