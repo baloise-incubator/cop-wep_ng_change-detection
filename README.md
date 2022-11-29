@@ -1,4 +1,15 @@
-# NgModern
+# Ng Change Detection
+
+## Slides
+
+- [Angular 2 change detection explained](https://pascalprecht.github.io/slides/angular-2-change-detection-explained/#/4)
+
+## Videos
+
+- [Angular 2 change detection explained](https://www.youtube.com/watch?v=X0DLP_rktsc&t=1s)
+- [4 Runtime Performance Optimizations](https://www.youtube.com/watch?v=f8sA-i6gkGQ)
+
+## Setup
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.1.
 
